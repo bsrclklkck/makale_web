@@ -12,6 +12,8 @@ namespace Makale_BusinessLayer
     {
         Repository<Not> rep_not = new Repository<Not>();
 
+        BusinessLayerSonuc<Not> notsonuc = new BusinessLayerSonuc<Not>();
+
         public List<Not> Listele()
         {
             return rep_not.Liste();
@@ -22,24 +24,69 @@ namespace Makale_BusinessLayer
             return rep_not.ListeQueryable();
         }
 
-        public Not NotBul(int value)
+        public Not NotBul(int id)
         {
-            throw new NotImplementedException();
+            return rep_not.Find(x => x.Id == id);
         }
 
-        public void NotKaydet(Not not)
+        public BusinessLayerSonuc<Not> NotKaydet(Not not)
         {
-            throw new NotImplementedException();
+            notsonuc.nesne = rep_not.Find(x => x.Baslik == not.Baslik && x.KategoriId == not.KategoriId);
+
+            if (notsonuc.nesne != null)
+            {
+                notsonuc.Hatalar.Add("Bu kategoride aynı isimde makale kayıtlıdır");
+            }
+            else
+            {
+                int sonuc = rep_not.Insert(not);
+                
+                if (sonuc < 1)
+                {
+                    notsonuc.Hatalar.Add("Kayıt eklenemedi");
+                }
+               
+                              
+            }
+            return notsonuc;
         }
 
-        public void NotSil(Not not)
+        public BusinessLayerSonuc<Not> NotSil(Not not)
         {
-            throw new NotImplementedException();
+           notsonuc.nesne=rep_not.Find(x=>x.Id == not.Id);
+            if (notsonuc.nesne!=null)
+            {
+                int sonuc = rep_not.Delete(not);
+                if (sonuc<1)
+                {
+                    notsonuc.Hatalar.Add("Makale silinemedi");
+                }
+
+            }
+            else
+            {
+                notsonuc.Hatalar.Add("Makale bulunamadı");
+            }
+
+            return notsonuc;
         }
 
-        public void NotUpdate(Not not)
+        public BusinessLayerSonuc<Not> NotUpdate(Not not)
         {
-            throw new NotImplementedException();
+            notsonuc.nesne=rep_not.Find(x=>x.Id == not.Id);
+            if (notsonuc.nesne!=null)
+            {
+                notsonuc.nesne.Baslik= not.Baslik;
+                notsonuc.nesne.Text = not.Text;
+                notsonuc.nesne.Taslak=not.Taslak;
+                notsonuc.nesne.KategoriId= not.KategoriId;
+
+                if (rep_not.Update(notsonuc.nesne)<1)
+                {
+                    notsonuc.Hatalar.Add("Kayıt güncellenemedi");
+                }
+            }
+            return notsonuc;
         }
     }
 }

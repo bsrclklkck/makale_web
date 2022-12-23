@@ -15,17 +15,18 @@ namespace Makale_DataAccessLayer
             
             Kullanici admin = new Kullanici() 
             {
-                 Ad="Elif",
-                 Soyad="Cengiz",
-                 Email="cenelif@gmail.com",
+                 Ad="busra",
+                 Soyad="kucuk",
+                 Email="busra.bsrclkl@gmail.com",
                  Sifre="1234",
                  Aktif=true,
                  Admin=true,
                  AktifGuid=Guid.NewGuid(),
-                 KullaniciAdi="elif",
+                 KullaniciAdi="busra",
                  KayitTarih=DateTime.Now,
                  DegistirmeTarihi=DateTime.Now.AddMinutes(5),
-                 DegistirenKullanici="elif"
+                 DegistirenKullanici="busra",
+                 ProfilResim="images.jpg"
             };
 
             context.Kullanicilar.Add(admin);
@@ -44,7 +45,8 @@ namespace Makale_DataAccessLayer
                      AktifGuid=Guid.NewGuid(),
                       KayitTarih=FakeData.DateTimeData.GetDatetime(DateTime.Now.AddYears(-1),DateTime.Now),
                       DegistirmeTarihi=DateTime.Now,
-                      DegistirenKullanici= "user" +i
+                      DegistirenKullanici= "user" +i,
+                      ProfilResim="images.jpg"
                 };
                 context.Kullanicilar.Add(user);
             }
@@ -79,6 +81,7 @@ namespace Makale_DataAccessLayer
                         KayitTarih = FakeData.DateTimeData.GetDatetime(DateTime.Now.AddYears(-1), DateTime.Now),
                         DegistirmeTarihi = DateTime.Now,
                         DegistirenKullanici= kullanicilistesi[FakeData.NumberData.GetNumber(0, 5)].KullaniciAdi,
+                        
                     };
 
                     kat.Notlar.Add(not);

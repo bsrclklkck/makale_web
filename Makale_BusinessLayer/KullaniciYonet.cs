@@ -14,6 +14,7 @@ namespace Makale_BusinessLayer
 {
     public class KullaniciYonet
     {
+        BusinessLayerSonuc<Kullanici> sonuc = new BusinessLayerSonuc<Kullanici>();
         Repository<Kullanici> rep_kul = new Repository<Kullanici>();
 
         public List<Kullanici> Listele()
@@ -23,13 +24,11 @@ namespace Makale_BusinessLayer
 
         public BusinessLayerSonuc<Kullanici> ActivateUser(Guid id)
         {
-            BusinessLayerSonuc<Kullanici> sonuc = new BusinessLayerSonuc<Kullanici>();
-
             sonuc.nesne = rep_kul.Find(x => x.AktifGuid == id);
-           
-            if(sonuc.nesne!=null)
+
+            if (sonuc.nesne != null)
             {
-                if(sonuc.nesne.Aktif)
+                if (sonuc.nesne.Aktif)
                 {
                     sonuc.Hatalar.Add("Kullanıcı zaten aktif edilmiştir");
                     return sonuc;
@@ -43,64 +42,60 @@ namespace Makale_BusinessLayer
             }
 
             return sonuc;
-
         }
 
         public BusinessLayerSonuc<Kullanici> Kaydet(KayitModel model)
         {
-            BusinessLayerSonuc<Kullanici> sonuc= new BusinessLayerSonuc<Kullanici>();
+            Kullanici k = new Kullanici();
+            k.KullaniciAdi = model.KullaniciAdi;
+            k.Email = model.Email;
 
-            Kullanici kullanici = rep_kul.Find(x => x.KullaniciAdi == model.KullaniciAdi || x.Email == model.Email);
+            sonuc = KullaniciKontrol(k);
 
-            if(kullanici!=null)
+            if (sonuc.Hatalar.Count > 0)
             {
-                if(kullanici.KullaniciAdi==model.KullaniciAdi)
-                {
-                    sonuc.Hatalar.Add("Kullanıcı adı sistemde kayıtlı");
-                }
-                if(kullanici.Email==model.Email)
-                {
-                    sonuc.Hatalar.Add("Email sistemde kayıtlı");
-                }
+                sonuc.nesne = k;
+                return sonuc;
             }
+
             else
             {
-               int kaydet= rep_kul.Insert(new Kullanici()
+                int kaydet = rep_kul.Insert(new Kullanici()
                 {
-                     Email=model.Email,
-                     KullaniciAdi=model.KullaniciAdi,
-                     Sifre=model.Sifre,
-                     AktifGuid=Guid.NewGuid(),
-                     Admin=false,
-                     Aktif=false                
+                    Email = model.Email,
+                    KullaniciAdi = model.KullaniciAdi,
+                    Sifre = model.Sifre,
+                    AktifGuid = Guid.NewGuid(),
+                    Admin = false,
+                    Aktif = false
                 });
-                if(kaydet>0)
+
+                if (kaydet > 0)
                 {
-     sonuc.nesne = rep_kul.Find(x=>x.Email==model.Email && x.KullaniciAdi==model.KullaniciAdi);
+                    sonuc.nesne = rep_kul.Find(x => x.Email == model.Email && x.KullaniciAdi == model.KullaniciAdi);
 
                     //Aktivasyon maili gönderilecek
                     string siteUrl = ConfigHelper.Get<string>("SiteRootUri");
                     string activateUrl = $"{siteUrl}/Home/UserActivate/{sonuc.nesne.AktifGuid}";
                     string body = $"Merhaba {sonuc.nesne.KullaniciAdi} <br/> Hesabınızı aktifleştirmek için <a href='{activateUrl}'> tıklayınız</a> ";
-                 
 
                     MailHelper.SendMail(body, sonuc.nesne.Email, "Hesap Aktifleştirme");
 
                 }
-               
+
             }
             return sonuc;
         }
-    
+
         public BusinessLayerSonuc<Kullanici> LoginKontrol(LoginModel model)
         {
-            BusinessLayerSonuc<Kullanici> sonuc = new BusinessLayerSonuc<Kullanici>();
+
 
             sonuc.nesne = rep_kul.Find(x => x.KullaniciAdi == model.KullaniciAdi && x.Sifre == model.Sifre);
 
             if (sonuc.nesne != null)
             {
-                if(!sonuc.nesne.Aktif)
+                if (!sonuc.nesne.Aktif)
                 {
                     sonuc.Hatalar.Add("Kullanıcı aktif değildir.Aktivasyon için e-posta adresiniz kontrol ediniz.");
                 }
@@ -112,28 +107,12 @@ namespace Makale_BusinessLayer
             return sonuc;
 
         }
-    
+
         public BusinessLayerSonuc<Kullanici> KullaniciUpdate(Kullanici kullanici)
         {
-            BusinessLayerSonuc<Kullanici> sonuc = new BusinessLayerSonuc<Kullanici>();
+            KullaniciKontrol(kullanici);
 
-            Kullanici k1 = rep_kul.Find(x => x.KullaniciAdi == kullanici.KullaniciAdi);
-
-            Kullanici k2 = rep_kul.Find(x => x.Email == kullanici.Email);
-
-            if(k1 != null && k1.Id != kullanici.Id)
-            {
-                //if (k1.KullaniciAdi == kullanici.KullaniciAdi)               
-                    sonuc.Hatalar.Add("Kullanıcı adı sistemde kayıtlı");             
-            }
-
-            if (k2 != null && k2.Id != kullanici.Id)
-            {
-               // if (k2.Email == kullanici.Email)                
-                    sonuc.Hatalar.Add("Email sistemde kayıtlı");                
-            }
-
-            if(sonuc.Hatalar.Count>0)
+            if (sonuc.Hatalar.Count > 0)
             {
                 sonuc.nesne = kullanici;
                 return sonuc;
@@ -146,25 +125,45 @@ namespace Makale_BusinessLayer
             sonuc.nesne.Email = kullanici.Email;
             sonuc.nesne.Sifre = kullanici.Sifre;
 
-            if(!string.IsNullOrEmpty(kullanici.ProfilResim))
+            if (!string.IsNullOrEmpty(kullanici.ProfilResim))
                 sonuc.nesne.ProfilResim = kullanici.ProfilResim;
 
-            int updatesonuc=rep_kul.Update(sonuc.nesne);
+            int updatesonuc = rep_kul.Update(sonuc.nesne);
 
-            if(updatesonuc<1)
+            if (updatesonuc < 1)
             {
                 sonuc.Hatalar.Add("Profil güncellenemedi");
             }
             return sonuc;
         }
 
+        private BusinessLayerSonuc<Kullanici> KullaniciKontrol(Kullanici kullanici)
+        {
+            Kullanici k1 = rep_kul.Find(x => x.KullaniciAdi == kullanici.KullaniciAdi);
+
+            Kullanici k2 = rep_kul.Find(x => x.Email == kullanici.Email);
+
+            if (k1 != null && k1.Id != kullanici.Id)
+            {
+                //if (k1.KullaniciAdi == kullanici.KullaniciAdi)      
+                sonuc.Hatalar.Add("Kullanıcı adı sistemde kayıtlı");
+            }
+
+            if (k2 != null && k2.Id != kullanici.Id)
+            {
+                // if (k2.Email == kullanici.Email)                
+                sonuc.Hatalar.Add("Email sistemde kayıtlı");
+            }
+
+            return sonuc;
+        }
+
         public BusinessLayerSonuc<Kullanici> KullaniciSil(int id)
         {
-            BusinessLayerSonuc<Kullanici> sonuc = new BusinessLayerSonuc<Kullanici>();
             sonuc.nesne = rep_kul.Find(x => x.Id == id);
-            if(sonuc.nesne!=null)
+            if (sonuc.nesne != null)
             {
-               int silsonuc= rep_kul.Delete(sonuc.nesne);
+                int silsonuc = rep_kul.Delete(sonuc.nesne);
                 if (silsonuc < 1)
                     sonuc.Hatalar.Add("Kullanıcı silinemedi.");
             }
@@ -180,9 +179,26 @@ namespace Makale_BusinessLayer
             throw new NotImplementedException();
         }
 
-        public void KullaniciKaydet(Kullanici kullanici)
+        public BusinessLayerSonuc<Kullanici> KullaniciKaydet(Kullanici kullanici)
         {
-            throw new NotImplementedException();
+            sonuc = KullaniciKontrol(kullanici);
+
+            if (sonuc.Hatalar.Count>0)
+            {
+                sonuc.nesne = kullanici;
+                return sonuc;
+            }
+            else
+            {
+                int kayit = rep_kul.Insert(kullanici);
+                if (kayit < 1)
+                {
+                    sonuc.Hatalar.Add("Kategori kaydedilemedi.");
+                }
+            }
+
+            return sonuc;
+           
         }
     }
 }

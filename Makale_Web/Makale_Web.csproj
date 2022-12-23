@@ -113,8 +113,8 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="image\deneme.jpg" />
+    <Content Include="image\images.jpg" />
     <Content Include="image\indir.jpg" />
-    <Content Include="image\user_1.jpg" />
     <Content Include="image\_sunset.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

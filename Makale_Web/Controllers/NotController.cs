@@ -14,7 +14,7 @@ namespace Makale_Web.Controllers
 {
     public class NotController : Controller
     {
-        NotYonet ny = new NotYonet();           
+        NotYonet ny = new NotYonet();
         public ActionResult Index()
         {
             var nots = ny.ListeleQueryable().Include(n => n.Kategori);
@@ -32,14 +32,14 @@ namespace Makale_Web.Controllers
         {
             LikeYonet ly = new LikeYonet();
 
-             var nots = ny.ListeleQueryable().Include(n => n.Kategori);
+            var nots = ny.ListeleQueryable().Include(n => n.Kategori);
             if (Session["login"] != null)
             {
                 Kullanici kullanici = (Kullanici)Session["login"];
-                nots = ly.ListeleQueryable().Include("Not").Where(x=>x.Kullanici.Id==kullanici.Id).Select(x=>x.Not).Include(k=>k.Kategori);
+                nots = ly.ListeleQueryable().Include("Not").Where(x => x.Kullanici.Id == kullanici.Id).Select(x => x.Not).Include(k => k.Kategori);
 
             }
-            return View("Index",nots.ToList());
+            return View("Index", nots.ToList());
         }
 
         public ActionResult Details(int? id)
@@ -58,6 +58,7 @@ namespace Makale_Web.Controllers
         }
 
         KategoriYonet ky = new KategoriYonet();
+
         public ActionResult Create()
         {
             ViewBag.KategoriId = new SelectList(ky.Listele(), "Id", "Baslik");
@@ -68,11 +69,29 @@ namespace Makale_Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Not not)
         {
+            Kullanici kullanici = null;
+            if (Session["login"] != null)
+            {
+
+                kullanici = (Kullanici)Session["login"];
+            }
+
+            not.Kullanici = kullanici;
+            ModelState.Remove("DegistirenKullanici");
+
             if (ModelState.IsValid)
             {
-                ny.NotKaydet(not);
+                BusinessLayerSonuc<Not> sonuc = ny.NotKaydet(not);
+                if (sonuc.Hatalar.Count > 0)
+                {
+                    sonuc.Hatalar.ForEach(x => ModelState.AddModelError("", x));
+                  
+                    ViewBag.KategoriId = new SelectList(ky.Listele(), "Id", "Baslik", not.KategoriId);
+                    return View(not);
+                }
                 return RedirectToAction("Index");
             }
+
             ViewBag.KategoriId = new SelectList(ky.Listele(), "Id", "Baslik", not.KategoriId);
             return View(not);
         }
@@ -96,12 +115,21 @@ namespace Makale_Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Not not)
         {
+            ViewBag.KategoriId = new SelectList(ky.Listele(), "Id", "Baslik", not.KategoriId);
+            return View(not);
+
             if (ModelState.IsValid)
             {
-                ny.NotUpdate(not);
+                BusinessLayerSonuc<Not> sonuc = ny.NotUpdate(not);
+                if (sonuc.Hatalar.Count>0)
+                {
+                    sonuc.Hatalar.ForEach(x=>ModelState.AddModelError("",x));
+                    return View(not);
+                }
+               
                 return RedirectToAction("Index");
             }
-            ViewBag.KategoriId = new SelectList(ky.Listele(), "Id", "Baslik", not.KategoriId);
+        
             return View(not);
         }
 
@@ -125,7 +153,13 @@ namespace Makale_Web.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Not not = ny.NotBul(id);
-            ny.NotSil(not);
+
+            BusinessLayerSonuc<Not> sonuc = ny.NotSil(not);
+             if (sonuc.Hatalar.Count > 0)
+                {
+                    sonuc.Hatalar.ForEach(x => ModelState.AddModelError("", x));
+                    return View(not);
+                }
             return RedirectToAction("Index");
         }
 
