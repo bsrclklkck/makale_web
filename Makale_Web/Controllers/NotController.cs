@@ -14,7 +14,7 @@ namespace Makale_Web.Controllers
 {
     public class NotController : Controller
     {
-        NotYonet ny = new NotYonet();     
+        NotYonet ny = new NotYonet();           
         public ActionResult Index()
         {
             var nots = ny.ListeleQueryable().Include(n => n.Kategori);
