@@ -9,7 +9,7 @@
     <div class="row">
 
         <div class="col-md-3">
-           @Html.Partial("_PartialPageKategoriler")
+            @Html.Partial("_PartialPageKategoriler")
         </div>
 
         <div class="col-md-9">
@@ -25,7 +25,7 @@
                         </ol>
                         <div class="carousel-inner">
                             <div class="item active">
-                                <img class="slide-image" src="~/image/_sunset.jpg"  alt="">
+                                <img class="slide-image" src="~/image/_sunset.jpg" alt="">
                             </div>
                             <div class="item">
                                 <img class="slide-image" src="~/image/indir.jpg" alt="">
@@ -60,27 +60,31 @@
                                     @item.Kullanici.KullaniciAdi<span class="glyphicon glyphicon-user"></span><br />
                                     @item.DegistirmeTarihi.ToString("dd.MM.yy HH:mm")<span class="glyphicon glyphicon-time"></span>
                                 </h6>
-                               
-                                    @if (!string.IsNullOrEmpty(item.Text) && item.Text.Length > 100)
-                                    {
-                                 <p>  @item.Text.Substring(0, 100)
-                                </p>
-                                <p class="pull-right">
-                                     <a href="#" class="btn btn-default btn-xs right"><span class="glyphicon glyphicon-chevron-right"></span>devamı</a>
-                                 </p>
-                                 }
-                                    else
-                                    {
-                                     <p> @item.Text</p>
-                                    }
-                                
+
+                                @if (!string.IsNullOrEmpty(item.Text) && item.Text.Length > 100)
+                                {
+                                    <p>
+                                        @item.Text.Substring(0, 100)
+                                    </p>
+                                    <p class="pull-right">
+                                        <a href="#" class="btn btn-default btn-xs right"><span class="glyphicon glyphicon-chevron-right"></span>devamı</a>
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p> @item.Text</p>
+                                }
+
                             </div>
                             <div>
                                 <hr />
                             </div>
                             <div class="ratings">
                                 <p class="pull-right">
-                                    <button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-comment text-danger"></span>Yorumlar </button>
+                                    <button class="btn btn-default btn-xs"
+                                            data-toggle="modal" data-target="#modal1" data-notid="@item.Id">
+                                        <span class="glyphicon glyphicon-comment text-danger"></span>Yorumlar
+                                    </button>
                                 </p>
                                 <p>
                                     <button class="btn btn-default btn-xs text-danger">
@@ -92,9 +96,6 @@
                     </div>
                 }
 
-
-
-
             </div>
 
         </div>
@@ -104,7 +105,26 @@
 </div>
 
 @section footer{
-    
+
     @Html.Partial("_PartialPageFooter")
 
+}
+
+@BootstrapHelper.ModalPopUp("modal1", "Yorumlar")
+
+<script>
+    $(function () {
+        $('#modal1').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget);
+            var notid = button.data("notid");
+
+            $('#modal1_body').load("/Yorum/YorumGoster/" + notid);
+
+        });
+    });
+    function yorumupdate(mod, yorumid, yorumtext)
+    {
+
     }
+
+</script>

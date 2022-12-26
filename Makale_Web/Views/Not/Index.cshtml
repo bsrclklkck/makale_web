@@ -71,9 +71,9 @@
         @Html.DisplayFor(modelItem => item.DegistirenKullanici)
     </td>
     <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+        @BootstrapHelper.Linkbuton("/Kategori/Edit/" + item.Id, "warning", "btn-sm", "edit", "")
+        @BootstrapHelper.Linkbuton("/Kategori/Details/" + item.Id, "info", "btn-sm", "search", "")
+        @BootstrapHelper.Linkbuton("/Kategori/Delete/" + item.Id, "danger", "btn-sm", "trash", "")
     </td>
 </tr>
 }

@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Makale_BusinessLayer;
 using Makale_Entities;
-
+using Makale_Web.Models;
 
 namespace Makale_Web.Controllers
 {
@@ -86,13 +86,13 @@ namespace Makale_Web.Controllers
                 {
                     sonuc.Hatalar.ForEach(x => ModelState.AddModelError("", x));
                   
-                    ViewBag.KategoriId = new SelectList(ky.Listele(), "Id", "Baslik", not.KategoriId);
+                    ViewBag.KategoriId = new SelectList(CacheHelper.kategoriler(), "Id", "Baslik", not.KategoriId);
                     return View(not);
                 }
                 return RedirectToAction("Index");
             }
 
-            ViewBag.KategoriId = new SelectList(ky.Listele(), "Id", "Baslik", not.KategoriId);
+            ViewBag.KategoriId = new SelectList(CacheHelper.kategoriler(), "Id", "Baslik", not.KategoriId);
             return View(not);
         }
 
@@ -107,7 +107,7 @@ namespace Makale_Web.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.KategoriId = new SelectList(ky.Listele(), "Id", "Baslik", not.KategoriId);
+            ViewBag.KategoriId = new SelectList(CacheHelper.kategoriler(), "Id", "Baslik", not.KategoriId);
             return View(not);
         }
 
@@ -115,10 +115,10 @@ namespace Makale_Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Not not)
         {
-            ViewBag.KategoriId = new SelectList(ky.Listele(), "Id", "Baslik", not.KategoriId);
+            ViewBag.KategoriId = new SelectList(CacheHelper.kategoriler(), "Id", "Baslik", not.KategoriId);
             return View(not);
 
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
                 BusinessLayerSonuc<Not> sonuc = ny.NotUpdate(not);
                 if (sonuc.Hatalar.Count>0)
