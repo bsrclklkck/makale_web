@@ -41,41 +41,51 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Kullanici.KullaniciAdi)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Kategori.Baslik)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Baslik)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Text)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Taslak)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.BegeniSayisi)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.KayitTarih)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.DegistirmeTarihi)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.DegistirenKullanici)
-    </td>
-    <td>
-        @BootstrapHelper.Linkbuton("/Kategori/Edit/" + item.Id, "warning", "btn-sm", "edit", "")
-        @BootstrapHelper.Linkbuton("/Kategori/Details/" + item.Id, "info", "btn-sm", "search", "")
-        @BootstrapHelper.Linkbuton("/Kategori/Delete/" + item.Id, "danger", "btn-sm", "trash", "")
-    </td>
-</tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Kullanici.KullaniciAdi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Kategori.Baslik)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Baslik)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Taslak)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BegeniSayisi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KayitTarih)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DegistirmeTarihi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DegistirenKullanici)
+            </td>
+            <td>
+            <td style="display:flex">
+                <button class="btn btn-default btn-xs"
+                        data-toggle="modal" data-target="#modal1" data-notid="@item.Id">
+                    <span class="glyphicon glyphicon-comment text-danger"></span>Yorumlar
+                </button>
+                @BootstrapHelper.Linkbuton("/Kategori/Edit/" + item.Id, "warning", "btn-sm", "edit", "")
+                @BootstrapHelper.Linkbuton("/Kategori/Details/" + item.Id, "info", "btn-sm", "search", "")
+                @BootstrapHelper.Linkbuton("/Kategori/Delete/" + item.Id, "danger", "btn-sm", "trash", "")
+
+            </td>
+
+        </tr>
+    }
 
 </table>
+@BootstrapHelper.ModalPopUp("modal1", "Yorumlar")
+<script src="~/Scripts/ScriptYorumlar.js"></script>

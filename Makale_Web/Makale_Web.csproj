@@ -113,6 +113,11 @@
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="image\deneme.jpg" />
+    <Content Include="image\images.jpg" />
+    <Content Include="image\indir.jpg" />
+    <Content Include="image\_sunset.jpg" />
+    <Content Include="App_Code\BootstrapHelper.cshtml" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -121,18 +126,15 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="image\deneme.jpg" />
-    <Content Include="image\images.jpg" />
-    <Content Include="image\indir.jpg" />
-    <Content Include="image\_sunset.jpg" />
+    <None Include="Scripts\jquery-3.6.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="App_Code\BootstrapHelper.cshtml" />
-    <None Include="Scripts\jquery-3.6.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.1.js" />
     <Content Include="Scripts\jquery-3.6.1.min.js" />
     <Content Include="Scripts\jquery-3.6.1.slim.js" />
     <Content Include="Scripts\jquery-3.6.1.slim.min.js" />
+    <Content Include="Scripts\ScriptLike.js" />
+    <Content Include="Scripts\ScriptYorumlar.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

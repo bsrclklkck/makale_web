@@ -19,16 +19,16 @@
         </div>
         <div class="media-body">
             <div>
-                <span class="col-md-10" id="text_@item.Id">@item.Id</span>
+                <span class="col-md-10" id="text_@item.Id" contenteditable="false">@item.Text</span>
 
                 @if (kullanici != null && kullanici.Id == item.Kullanici.Id)
                 {
                     <span class="col-md-2 text-right">
-                        <button type="button" class="btn btn warning btn-xs" onclick="yorumupdate('edit',@item.Id, text_@item.Id);">
+                        <button type="button" class="btn btn-warning btn-xs" data-edit="false" onclick="yorumislem(this,'update',@item.Id, text_@item.Id);">
                             <span class="glyphicon glyphicon-edit"></span>
                         </button>
-                        <button type="button" class="btn btn-danger btn-xs">
-                            <span class="glyphicon glpyhicon glyphicon-trash"></span>
+                        <button type="button" class="btn btn-danger btn-xs" onclick="yorumislem(this,'delete',@item.Id, text_@item.Id);">
+                            <span class="glyphicon glyphicon-trash"></span>
                         </button>
                     </span>
                 }
@@ -37,8 +37,21 @@
                     <span class="glyphicon glyphicon-time"></span>@item.DegistirmeTarihi
                     <span class="glyphicon glpyhicon-user"></span>@item.Kullanici.KullaniciAdi
                 </small>
+
             </div>
         </div>
     </div>
+}
+@if (kullanici != null)
+{ <div>
+    <div class="row">
+        <div class="input-group">
+            <input type="text" class="form-control" id="yorum_text" placeholder="Yorumunuz...">
+            <span class="input-group-btn">
+                <button class="btn btn-default" onclick="yorumislem(this,'create');" type="button">Kaydet</button>
+            </span>
+        </div><!-- /input-group -->
+    </div>
+</div>
 }
 

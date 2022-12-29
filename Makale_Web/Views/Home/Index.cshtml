@@ -49,7 +49,7 @@
 
                 @foreach (var item in Model)
                 {
-                    <div class="col-sm-4 col-lg-4 col-md-4">
+                    <div class="col-sm-4 col-lg-4 col-md-4" data-notid="@item.Id">
                         <div class="thumbnail">
                             <img src="~/image/deneme.jpg" alt="">
                             <div class="caption">
@@ -87,8 +87,9 @@
                                     </button>
                                 </p>
                                 <p>
-                                    <button class="btn btn-default btn-xs text-danger">
-                                        <span class="glyphicon glyphicon-heart text-danger"></span>@item.BegeniSayisi
+                                    <button type="button" class="btn btn-default btn-xs text-danger" data-notid="@item.Id" data-like="false">
+                                        <span class="glyphicon glyphicon-heart-empty text-danger like-kalp"></span>
+                                        <span class="begenisayisi">@item.BegeniSayisi</span>
                                     </button>
                                 </p>
                             </div>
@@ -112,19 +113,6 @@
 
 @BootstrapHelper.ModalPopUp("modal1", "Yorumlar")
 
-<script>
-    $(function () {
-        $('#modal1').on('show.bs.modal', function (e) {
-            var button = $(e.relatedTarget);
-            var notid = button.data("notid");
+<script src="~/Scripts/ScriptYorumlar.js"></script>
+<script src="~/Scripts/ScriptLike.js"></script>
 
-            $('#modal1_body').load("/Yorum/YorumGoster/" + notid);
-
-        });
-    });
-    function yorumupdate(mod, yorumid, yorumtext)
-    {
-
-    }
-
-</script>
