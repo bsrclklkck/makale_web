@@ -9,6 +9,8 @@ $(function () {
 
     });
 });
+
+
 function yorumislem(btn, islem, yorumid, yorumtext) {
     var button = $(btn);
     var editmod = button.data("edit");  /* butonun edit datasını al */

@@ -45,8 +45,13 @@ $(function () {
             url: "/NOT/SetLikes",
             data: { notid: notid, like: !like }
         }).done(function (data) {
+           
 
             if (data.hata) {
+
+                if (data.res == -1) {
+                    window.location.href = '/Home/Login';
+                }
                 alert("begeni işlemi gerçekleşmedi")
             }
             else {

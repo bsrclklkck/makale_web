@@ -8,14 +8,18 @@ using System.Web;
 using System.Web.Mvc;
 using Makale_BusinessLayer;
 using Makale_Entities;
+using Makale_Web.Filters;
 using Makale_Web.Models;
 
 namespace Makale_Web.Controllers
 {
+    
     public class NotController : Controller
     {
         LikeYonet ly = new LikeYonet();
         NotYonet ny = new NotYonet();
+
+        [Auth]
         public ActionResult Index()
         {
             var nots = ny.ListeleQueryable().Include(n => n.Kategori);
@@ -28,7 +32,7 @@ namespace Makale_Web.Controllers
 
             return View(nots.ToList());
         }
-
+        [Auth]
         public ActionResult Begendiklerim()
         {
 
@@ -43,6 +47,7 @@ namespace Makale_Web.Controllers
             return View("Index", nots.ToList());
         }
 
+        [Auth]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -60,12 +65,14 @@ namespace Makale_Web.Controllers
 
         KategoriYonet ky = new KategoriYonet();
 
+        [Auth]
         public ActionResult Create()
         {
             ViewBag.KategoriId = new SelectList(ky.Listele(), "Id", "Baslik");
             return View();
         }
 
+        [Auth]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Not not)
@@ -97,6 +104,7 @@ namespace Makale_Web.Controllers
             return View(not);
         }
 
+        [Auth]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -112,6 +120,7 @@ namespace Makale_Web.Controllers
             return View(not);
         }
 
+        [Auth]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Not not)
@@ -135,6 +144,7 @@ namespace Makale_Web.Controllers
             return View(not);
         }
 
+        [Auth]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -148,7 +158,7 @@ namespace Makale_Web.Controllers
             }
             return View(not);
         }
-
+        [Auth]
         // POST: Not/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -164,7 +174,7 @@ namespace Makale_Web.Controllers
             }
             return RedirectToAction("Index");
         }
-
+        [Auth]
         public ActionResult GetLikes(int[] id_dizi)
         {
             List<int> likenot = new List<int>();
@@ -180,11 +190,16 @@ namespace Makale_Web.Controllers
 
             return Json(new { sonuc = likenot });
         }
-
+       
         public ActionResult SetLikes(int notid, bool like)
         {
             int sonuc = 0;
             Kullanici kullanici = (Kullanici)Session["login"];
+
+            if (kullanici==null)
+            {
+                return Json(new {hata = true , res = -1});
+            }
 
             Not not = ny.NotBul(notid);
             Begeni begen = ly.BegeniBul(notid, kullanici.Id);
@@ -225,6 +240,17 @@ namespace Makale_Web.Controllers
             }
 
             return Json(new {hata=true, res=not.BegeniSayisi }) ;
+        }
+
+        public ActionResult NotGoster(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }
+           
+            Not not = ny.NotBul(id.Value);
+            return PartialView("_PartialPageNot", not);
         }
     }
 }

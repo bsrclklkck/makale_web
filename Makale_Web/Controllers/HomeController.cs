@@ -2,6 +2,7 @@
 using Makale_Common;
 using Makale_Entities;
 using Makale_Entities.ViewModel;
+using Makale_Web.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Web.Mvc;
 
 namespace Makale_Web.Controllers
 {
+    [Exc]
     public class HomeController : Controller
     {
         NotYonet ny = new NotYonet();
@@ -19,14 +21,18 @@ namespace Makale_Web.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            //int s= 1;
+            //int y = s/ 0;
+
             //Test test1 = new Test();
             //test1.InsertTest();
             //  test1.UpdateTest();
             // test1.DeleteTest();
             //  test1.YorumEkle();
-     
+
             //return View(ny.Listele().OrderByDescending(x => x.DegistirmeTarihi).ToList());
-            return View(ny.ListeleQueryable().OrderByDescending(x=>x.DegistirmeTarihi).ToList());
+
+            return View(ny.ListeleQueryable().Where(x => x.Taslak == false).OrderByDescending(x => x.DegistirmeTarihi).ToList());
         }
         public ActionResult Kategori(int? id)
         {
@@ -35,13 +41,17 @@ namespace Makale_Web.Controllers
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
             }           
            
-            Kategori kategori = kty.KategoriBul(id.Value);
+            //Kategori kategori = kty.KategoriBul(id.Value);
 
-            if(kategori == null)
-            {
-                return HttpNotFound();
-            }
-            return View("Index",kategori.Notlar);
+            //if(kategori == null)
+            //{
+            //    return HttpNotFound();
+            //}
+            //return View("Index",kategori.Notlar);
+
+            List<Not> notlar = ny.ListeleQueryable().Where(x=>x.Taslak == false && x.KategoriId == id).OrderByDescending(x=>x.DegistirmeTarihi).ToList();
+            //return View(ny.ListeleQueryable().Where(x => x.Taslak == false).OrderByDescending(x => x.DegistirmeTarihi).ToList());
+            return View("Index",notlar);
         }
 
         public ActionResult Begenilenler()
@@ -141,7 +151,7 @@ namespace Makale_Web.Controllers
 
             return View(hatalar);
         }
-
+        [Auth]
         public ActionResult ProfilGoster()
         {
             Kullanici kullanici =(Kullanici)Session["login"];
@@ -149,7 +159,7 @@ namespace Makale_Web.Controllers
 
             return View(kullanici);
         }
-
+        [Auth]
         public ActionResult ProfilDegistir()
         {
             Kullanici kullanici = (Kullanici)Session["login"];
@@ -204,5 +214,9 @@ namespace Makale_Web.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult ErrorPage()
+        {
+            return View();
+        }
     }
 }

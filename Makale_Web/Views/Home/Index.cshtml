@@ -67,7 +67,7 @@
                                         @item.Text.Substring(0, 100)
                                     </p>
                                     <p class="pull-right">
-                                        <a href="#" class="btn btn-default btn-xs right"><span class="glyphicon glyphicon-chevron-right"></span>devamı</a>
+                                        <a href="#" class="btn btn-default btn-xs right" data-toggle="modal" data-target="#modalnot" data-notid="@item.Id"><span class="glyphicon glyphicon-chevron-right"></span>devamı</a>
                                     </p>
                                 }
                                 else
@@ -112,7 +112,9 @@
 }
 
 @BootstrapHelper.ModalPopUp("modal1", "Yorumlar")
+@BootstrapHelper.ModalPopUp("modalnot", "Makale Detay")
+
 
 <script src="~/Scripts/ScriptYorumlar.js"></script>
 <script src="~/Scripts/ScriptLike.js"></script>
-
+<script src="~/Scripts/ScriptNot.js"></script>

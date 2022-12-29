@@ -1,5 +1,6 @@
 ﻿using Makale_BusinessLayer;
 using Makale_Entities;
+using Makale_Web.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace Makale_Web.Controllers
             return PartialView("_PartialPageYorumlar", not.Yorumlar);
         }
 
+        [Auth]
         public ActionResult Edit(int? id, string text)
         {
             if (id == null)
@@ -51,7 +53,7 @@ namespace Makale_Web.Controllers
             return Json(new { sonuc = false }, JsonRequestBehavior.AllowGet);
 
         }
-
+        [Auth]
         public ActionResult Delete(int? id)
         {
 
@@ -72,6 +74,7 @@ namespace Makale_Web.Controllers
             return Json(new { sonuc = false }, JsonRequestBehavior.AllowGet);
 
         }
+        [Auth]
         public ActionResult Create(Yorum yorum , int? notid)
         {
             ModelState.Remove("DegistirenKullanici");
